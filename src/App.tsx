@@ -6,21 +6,22 @@ import Summary from "./pages/Summary";
 function App() {
   return (
     <HashRouter>
-      <div className="">
-        <h1>Welcome Back to Crawl</h1>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/add-tasks">Add Today's Tasks</Link>
-            </li>
-            <li>
-              <Link to="/previous-tasks">Previous Tasks</Link>
-            </li>
-            <li>
-              <Link to="/summary">Summary</Link>
-            </li>
-          </ul>
-        </nav>
+      <div>
+        <div>
+          <nav className="bg-blue-200 py-2">
+            <ul className="flex gap-4">
+              <li>
+                <Link to="/add-tasks">Today's Tasks</Link>
+              </li>
+              <li>
+                <Link to="/previous-tasks">Previous Tasks</Link>
+              </li>
+              <li>
+                <Link to="/summary">Summary</Link>
+              </li>
+            </ul>
+          </nav>
+        </div>
         <Routes>
           <Route path="/add-tasks" Component={AddTasks} />
           <Route path="/previous-tasks" Component={PreviousTasks} />
