@@ -3,7 +3,6 @@ import { useState, useRef, KeyboardEvent } from "react";
 const TaskForm = () => {
   const [taskCode, setTaskCode] = useState<string>("");
   const [startTime, setStartTime] = useState<string>("");
-  const [endTime, setEndTime] = useState<string>("");
   const [message, setMessage] = useState<string>(
     "Enter task code (C for Coding, R for Reading, A for Action, W for Writing, L for Learning, Ch for Chores, E for Entertainment, or X to exit):"
   );
@@ -16,17 +15,24 @@ const TaskForm = () => {
     A: "Action",
     W: "Writing",
     L: "Learning",
-    Ch: "Chores",
+    CH: "Chores",
     E: "Entertainment",
   };
 
   const handleTaskCodeInput = (e: KeyboardEvent<HTMLInputElement>) => {
     if (e.key === "Enter") {
       const value = (e.target as HTMLInputElement).value.trim().toUpperCase();
-      if (taskNames[value]) {
+      if (value === "X") {
+        resetForm();
+        setMessage(
+          "Enter task code (C for Coding, R for Reading, A for Action, W for Writing, L for Learning, Ch for Chores, E for Entertainment, or X to exit):"
+        );
+        setFeedback("");
+        clearInput();
+      } else if (taskNames[value]) {
         setTaskCode(value);
         setMessage(
-          `Enter start time for ${taskNames[value]} (HH:MM or HHMM) or 'now' for the current time:`
+          `Enter start time for ${taskNames[value]} (HH:MM or HHMM) or 'now' for the current time (or X to change task code):`
         );
         setFeedback(""); // Clear feedback
         clearInput();
@@ -42,16 +48,24 @@ const TaskForm = () => {
         .trim()
         .toLowerCase();
       const startTimeInput =
-        inputValue === "now"
+        inputValue === "" || inputValue === "now"
           ? new Date().toLocaleTimeString("en-GB", {
               hour: "2-digit",
               minute: "2-digit",
             })
           : formatTime(inputValue);
-      if (startTimeInput) {
+
+      if (inputValue === "x") {
+        resetForm();
+        setMessage(
+          "Enter task code (C for Coding, R for Reading, A for Action, W for Writing, L for Learning, Ch for Chores, E for Entertainment, or X to exit):"
+        );
+        setFeedback("");
+        clearInput();
+      } else if (startTimeInput) {
         setStartTime(startTimeInput);
         setMessage(
-          `Started at ${startTimeInput}. Enter end time for ${taskNames[taskCode]} (HH:MM or HHMM) or 'now' for the current time:`
+          `Started at ${startTimeInput}. Enter end time for ${taskNames[taskCode]} (HH:MM or HHMM) or 'now' for the current time (or X to change task code):`
         );
         setFeedback(""); // Clear feedback
         clearInput();
@@ -67,15 +81,22 @@ const TaskForm = () => {
         .trim()
         .toLowerCase();
       const endTimeInput =
-        inputValue === "now"
+        inputValue === "" || inputValue === "now"
           ? new Date().toLocaleTimeString("en-GB", {
               hour: "2-digit",
               minute: "2-digit",
             })
           : formatTime(inputValue);
-      if (endTimeInput) {
+
+      if (inputValue === "x") {
+        resetForm();
+        setMessage(
+          "Enter task code (C for Coding, R for Reading, A for Action, W for Writing, L for Learning, Ch for Chores, E for Entertainment, or X to exit):"
+        );
+        setFeedback("");
+        clearInput();
+      } else if (endTimeInput) {
         if (isEndTimeValid(startTime, endTimeInput)) {
-          setEndTime(endTimeInput);
           const timeSpent = calculateTimeSpent(startTime, endTimeInput);
           setFeedback(`You Spent ${timeSpent} Minutes ${taskNames[taskCode]}`);
           setMessage(
@@ -132,7 +153,6 @@ const TaskForm = () => {
   const resetForm = () => {
     setTaskCode("");
     setStartTime("");
-    setEndTime("");
   };
 
   return (
